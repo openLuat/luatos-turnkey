@@ -1,37 +1,37 @@
 # luatos-turnkey
 
-#### 介绍
-存放解决方案
+## 介绍
 
-#### 软件架构
-软件架构说明
+存放LuatOS相关的解决方案
 
+项目列表及搜索: TODO
 
-#### 安装教程
+## 存放规则
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+每个项目以独立目录存放在projects主目录下, 项目文件需要符合要求
 
-#### 使用说明
+实例:
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+```
+projects
+    - 00001.短信转发        # 项目编号及简短描述
+        - README.md        # [必须存在]项目介绍
+        - user             # [可选]脚本文件及资源文件
+        - files            # [可选]其他辅助文件,例如固件文件,合成好的量产文件等
+        - 其他目录          # [可选]项目可自行添加其他目录
+        - .luatos          # [可选]LuatOS相关文件
+            - project.json # [可选]LuatIDE项目文件   
+```
 
-#### 参与贡献
+编号规则, 默认从 00001 开始的 5位 整数
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+## 对README.md 要求
 
+1. README.md应准确描述本项目的功能,适用场景,所需要的硬件模块
+2. 提供相关资料的链接
+3. 尽量提供测试固件
 
-#### 特技
+## 开源协议
 
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+[MIT License](LICENSE)
+
