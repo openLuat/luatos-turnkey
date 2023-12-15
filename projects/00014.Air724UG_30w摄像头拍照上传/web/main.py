@@ -17,4 +17,12 @@ def upload():
     with open("data/" + path, "wb") as f :
         f.write(request.body.read())
 
+@post("/api/upload/form")
+def upload():
+    dt = datetime.now()
+    path = dt.strftime("data/%Y-%m-%d_%H%M%S") + ".jpg"
+    if "filename" in request.files :
+        f = request.files["filename"]
+        f.save(path)
+
 bottle.run(host="0.0.0.0", port=9000)

@@ -140,6 +140,68 @@ function opencamera()
     sys.timerStart(takePhotoAndSendToUart,1000)
 end
 
+-- 表单上传
+function postMultipartFormData(url,cert,params,timeout,cbFnc,rcvFileName)
+    local boundary,body,k,v,kk,vv = "--------------------------"..os.time()..rtos.tick(),{}
+
+    for k,v in pairs(params) do
+        if k=="texts" then
+            local bodyText = ""
+            for kk,vv in pairs(v) do
+                bodyText = bodyText.."--"..boundary.."\r\nContent-Disposition: form-data; name=\""..kk.."\"\r\n\r\n"..vv.."\r\n"
+            end
+            body[#body+1] = bodyText
+        elseif k=="files" then
+            local contentType =
+            {
+                jpg = "image/jpeg",
+                jpeg = "image/jpeg",
+                png = "image/png",
+            }
+            for kk,vv in pairs(v) do
+                print(kk,vv)
+                body[#body+1] = "--"..boundary.."\r\nContent-Disposition: form-data; name=\""..kk.."\"; filename=\""..kk.."\"\r\nContent-Type: "..contentType[vv:match("%.(%w+)$")].."\r\n\r\n"
+                body[#body+1] = {file = vv}
+                body[#body+1] = "\r\n"
+            end
+        end
+    end
+    body[#body+1] = "--"..boundary.."--\r\n"
+
+    http.request(
+        "POST",
+        url,
+        cert,
+        {
+            ["Content-Type"] = "multipart/form-data; boundary="..boundary,
+            ["Connection"] = "keep-alive"
+        },
+        body,
+        timeout,
+        cbFnc,
+        rcvFileName
+        )
+end
+
+-- 表单方式上传, body是mulitpart/form
+function upload_form()
+    postMultipartFormData("upload.air32.cn/api/upload/form", nil, 
+    {files={filename="/testCamera.jpg"}}
+    , 15000, function(result,prompt,head,body)
+        log.info("http上报结果", result,prompt,head)
+    end)
+end
+
+-- 流式直接上传, body就是文件
+function upload_stream()
+    http.request("POST","upload.air32.cn/api/upload/jpg",nil,
+    {['Content-Type']="application/octet-stream",['Connection']="keep-alive"},
+    {[1]={['file']="/testCamera.jpg"}},
+    15000,function(result,prompt,head,body)
+       log.info("http上报结果", result,prompt,head)
+    end)
+end
+
 -- 拍照并通过usb发送出去
 function takePhotoAndSendToUart()
     --允许系统休眠
@@ -156,13 +218,11 @@ function takePhotoAndSendToUart()
     -- 关闭摄像头
     -- log.info("关闭摄像头的结果", disp.cameraclose())
 
-    http.request("POST","upload.air32.cn/api/upload/jpg",nil,
-         {['Content-Type']="application/octet-stream",['Connection']="keep-alive"},
-         {[1]={['file']="/testCamera.jpg"}},
-         15000,function(result,prompt,head,body)
-            log.info("http上报结果", result,prompt,head)
-    end)
+    -- 流式直接上传, body就是文件
+    -- upload_stream()
 
+    -- 表单方式上传, body是mulitpart/form
+    upload_form()
 
     sys.timerStart(opencamera, 30000)
 end
